@@ -2,13 +2,14 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 const commentModel = require("./Comment");
 const followerModel = require("./Follower");
-const followRequestModel = require("./FollowRequest");
+const followRequestModel = require("./Followrequest");
 const likeModel = require("./Like");
 const messageModel = require("./Message");
 const postModel = require("./Post");
 const profileModel = require("./Profile");
 const storyModel = require("./Story");
 const userModel = require("./User");
+const JwtTokenListModel = require("./JwtTokenList");
 
 const config = require("../database/config/index")[process.env.NODE_ENV];
 const db = {};
@@ -32,5 +33,6 @@ db.Post = postModel(sequelize, DataTypes);
 db.Profile = profileModel(sequelize, DataTypes);
 db.Story = storyModel(sequelize, DataTypes);
 db.User = userModel(sequelize, DataTypes);
+db.JwtTokenList = JwtTokenListModel(sequelize, DataTypes);
 
 module.exports = db;
