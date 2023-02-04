@@ -3,10 +3,14 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("JwtTokenList", {
-      user_id: {
+      id: {
         type: Sequelize.UUID,
         allowNull: false,
         primaryKey: true,
+      },
+      user_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
       },
       token: {
         type: Sequelize.STRING,
