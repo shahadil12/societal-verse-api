@@ -10,15 +10,19 @@ module.exports = function followRequestModel(sequelize, DataTypes) {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      requesterId: {
+      requester_id: {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      requestedId: {
+      requested_id: {
         type: DataTypes.UUID,
         allowNull: false,
       },
       createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
+      updatedAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },

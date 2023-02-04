@@ -8,11 +8,11 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-      senderId: {
+      sender_id: {
         type: Sequelize.UUID,
         allowNull: false,
       },
-      receiverId: {
+      receiver_id: {
         type: Sequelize.UUID,
         allowNull: false,
       },

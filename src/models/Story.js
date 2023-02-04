@@ -10,7 +10,7 @@ module.exports = function storyModel(sequelize, DataTypes) {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      userId: {
+      user_id: {
         type: DataTypes.INTEGER,
         references: {
           model: "User",

@@ -8,7 +8,7 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-      userId: {
+      user_id: {
         type: Sequelize.UUID,
       },
       picture: {
@@ -20,6 +20,7 @@ module.exports = {
       },
       updatedAt: {
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
     });
   },

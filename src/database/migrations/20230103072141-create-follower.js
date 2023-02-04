@@ -8,11 +8,11 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-      followingId: {
+      following_id: {
         type: Sequelize.UUID,
         allowNull: false,
       },
-      followerId: {
+      follower_id: {
         type: Sequelize.UUID,
         allowNull: false,
       },
@@ -22,6 +22,7 @@ module.exports = {
       },
       updatedAt: {
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
     });
   },

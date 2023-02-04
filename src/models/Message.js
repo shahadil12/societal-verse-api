@@ -10,11 +10,11 @@ module.exports = function messageModel(sequelize, DataTypes) {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      senderId: {
+      sender_id: {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      receiverId: {
+      receiver_id: {
         type: DataTypes.UUID,
         allowNull: false,
       },

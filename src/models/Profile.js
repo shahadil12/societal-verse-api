@@ -10,23 +10,15 @@ module.exports = function profileModel(sequelize, DataTypes) {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      userId: {
+      user_id: {
         type: DataTypes.INTEGER,
         references: {
           model: "User",
           key: "id",
         },
       },
-      firstName: {
+      full_name: {
         type: DataTypes.STRING,
-        allowNull: false,
-      },
-      lastName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      dateOfBirth: {
-        type: DataTypes.DATE,
         allowNull: false,
       },
       bio: {
@@ -35,13 +27,13 @@ module.exports = function profileModel(sequelize, DataTypes) {
       private: {
         type: DataTypes.BOOLEAN,
       },
-      profilePicture: {
+      profile_picture: {
         type: DataTypes.TEXT,
       },
-      storyProfilePicture: {
+      story_profile_picture: {
         type: DataTypes.TEXT,
       },
-      thumbnailProfilePicture: {
+      thumbnail_profile_picture: {
         type: DataTypes.TEXT,
       },
       createdAt: {

@@ -21,11 +21,14 @@ module.exports = function postModel(sequelize, DataTypes) {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      created_at: {
+      caption: {
+        type: DataTypes.STRING(500),
+      },
+      createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
-      updated_at: {
+      updatedAt: {
         type: DataTypes.DATE,
       },
     },

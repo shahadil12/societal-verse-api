@@ -10,7 +10,7 @@ module.exports = function userModel(sequelize, DataTypes) {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      fullName: {
+      full_name: {
         type: DataTypes.STRING,
         allowNull: false,
       },

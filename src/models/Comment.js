@@ -10,14 +10,14 @@ module.exports = function commentModel(sequelize, DataTypes) {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      userId: {
+      user_id: {
         type: DataTypes.INTEGER,
         references: {
           model: "User",
           key: "id",
         },
       },
-      postId: {
+      post_id: {
         type: DataTypes.INTEGER,
         references: {
           model: "Post",

@@ -8,10 +8,10 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-      userId: {
+      user_id: {
         type: Sequelize.UUID,
       },
-      postId: {
+      post_id: {
         type: Sequelize.UUID,
       },
       createdAt: {

@@ -8,7 +8,7 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-      fullName: {
+      full_name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -31,6 +31,7 @@ module.exports = {
       },
       updatedAt: {
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
     });
   },

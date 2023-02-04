@@ -8,19 +8,11 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-      userId: {
+      user_id: {
         type: Sequelize.UUID,
       },
-      firstName: {
+      full_name: {
         type: Sequelize.STRING,
-        allowNull: false,
-      },
-      lastName: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      dateOfBirth: {
-        type: Sequelize.DATE,
         allowNull: false,
       },
       bio: {
@@ -29,13 +21,13 @@ module.exports = {
       private: {
         type: Sequelize.BOOLEAN,
       },
-      profilePicture: {
+      profile_picture: {
         type: Sequelize.TEXT,
       },
-      storyProfilePicture: {
+      story_profile_picture: {
         type: Sequelize.TEXT,
       },
-      thumbnailProfilePicture: {
+      thumbnail_profile_picture: {
         type: Sequelize.TEXT,
       },
       createdAt: {
@@ -44,6 +36,7 @@ module.exports = {
       },
       updatedAt: {
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
     });
   },

@@ -8,15 +8,19 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-      requesterId: {
+      requester_id: {
         type: Sequelize.UUID,
         allowNull: false,
       },
-      requestedId: {
+      requested_id: {
         type: Sequelize.UUID,
         allowNull: false,
       },
       createdAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+      },
+      updatedAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
       },

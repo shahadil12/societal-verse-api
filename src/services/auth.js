@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const db = require("../models");
 
-const register = async ({ email, password, fullName }) => {
+const register = async ({ email, password, full_name }) => {
   try {
     const existingUser = await db.User.findOne({ where: { email } });
     if (existingUser) {
@@ -20,7 +20,7 @@ const register = async ({ email, password, fullName }) => {
 
     await db.User.create({
       id: uuidv4(),
-      fullName,
+      full_name,
       email,
       hash,
       salt,

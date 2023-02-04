@@ -10,11 +10,11 @@ module.exports = function followerModel(sequelize, DataTypes) {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      followingId: {
+      following_id: {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      followerId: {
+      follower_id: {
         type: DataTypes.UUID,
         allowNull: false,
       },

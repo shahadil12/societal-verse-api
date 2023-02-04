@@ -1,5 +1,6 @@
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const { v4: uuidv4 } = require("uuid");
 const loginStrategy = require("../utils/loginStrategy");
 const db = require("../models");
 
@@ -19,6 +20,13 @@ const login = async (req, res, next) => {
 
         const body = { id: user.id, email: user.email };
         const token = jwt.sign({ user: body }, "TOP_SECRET");
+
+        await db.Profile.create({
+          id: uuidv4(),
+          user_id: user.id,
+          full_name: user.full_name,
+          private: false,
+        });
 
         await db.JwtTokenList.create({
           user_id: user.id,
