@@ -1,4 +1,4 @@
-const followService = require("../services/followService");
+const followService = require("../services/follow");
 
 const follow = async (req, res) => {
   const response = await followService.follow(
