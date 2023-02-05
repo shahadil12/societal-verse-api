@@ -17,12 +17,26 @@ module.exports = function profileModel(sequelize, DataTypes) {
           key: "id",
         },
       },
-      full_name: {
-        type: DataTypes.STRING,
+      first_name: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+      },
+      last_name: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+      },
+      user_name: {
+        type: DataTypes.STRING(20),
         allowNull: false,
       },
       bio: {
         type: DataTypes.STRING(500),
+      },
+      gender: {
+        type: DataTypes.STRING(10),
+      },
+      dob: {
+        type: DataTypes.DATEONLY,
       },
       private: {
         type: DataTypes.BOOLEAN,

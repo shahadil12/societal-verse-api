@@ -6,7 +6,7 @@ const profileSuggestion = async (req, res) => {
 };
 
 const createProfile = async (req, res) => {
-  const response = await profileService.createProfile(req.user.id);
+  const response = await profileService.createProfile(req.user.id, req.body);
   return res.json(response);
 };
 

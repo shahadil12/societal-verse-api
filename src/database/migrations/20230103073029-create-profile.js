@@ -11,12 +11,26 @@ module.exports = {
       user_id: {
         type: Sequelize.UUID,
       },
-      full_name: {
-        type: Sequelize.STRING,
+      first_name: {
+        type: Sequelize.STRING(20),
+        allowNull: false,
+      },
+      last_name: {
+        type: Sequelize.STRING(20),
+        allowNull: false,
+      },
+      user_name: {
+        type: Sequelize.STRING(20),
         allowNull: false,
       },
       bio: {
         type: Sequelize.STRING(500),
+      },
+      gender: {
+        type: Sequelize.STRING(10),
+      },
+      dob: {
+        type: Sequelize.DATEONLY,
       },
       private: {
         type: Sequelize.BOOLEAN,

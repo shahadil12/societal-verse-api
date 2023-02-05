@@ -8,8 +8,9 @@ const db = require("../models");
 require("dotenv").config();
 passport.use("login", loginStrategy);
 
-const register = async ({ email, password, full_name }) => {
+const register = async (req) => {
   try {
+    const { email, password, full_name } = req.body;
     const existingUser = await db.User.findOne({ where: { email } });
     if (existingUser) {
       return {
@@ -23,7 +24,7 @@ const register = async ({ email, password, full_name }) => {
       .pbkdf2Sync(password, salt, 1000, 64, "sha512")
       .toString("hex");
 
-    await db.User.create({
+    const user = await db.User.create({
       id: uuidv4(),
       full_name,
       email,
@@ -31,8 +32,9 @@ const register = async ({ email, password, full_name }) => {
       salt,
     });
 
-    return { success: true };
+    return { success: true, token: await generateToken(req, user) };
   } catch (error) {
+    console.log({ error });
     return { success: false, error };
   }
 };
@@ -49,20 +51,8 @@ const login = async (req, res, next) => {
       if (!user) {
         return res.json({ error: "User not found" });
       }
-      req.login(user, { session: false }, async (error) => {
-        if (error) return next(error);
 
-        const body = { id: user.id, email: user.email };
-        const token = jwt.sign({ user: body }, process.env.JWT_SECRET);
-
-        await db.JwtTokenList.create({
-          id: uuidv4(),
-          user_id: user.id,
-          token: token,
-        });
-
-        return res.json({ token });
-      });
+      return res.json({ token: await generateToken(req, user) });
     } catch (error) {
       return next(error);
     }
@@ -77,6 +67,29 @@ const logout = async (userId) => {
   } catch (error) {
     return { success: false, error };
   }
+};
+
+const generateToken = async (req, user) => {
+  return new Promise((resolve, reject) => {
+    try {
+      req.login(user, { session: false }, async (error) => {
+        if (error) return reject(error);
+
+        const body = { id: user.id, email: user.email };
+        const token = jwt.sign({ user: body }, process.env.JWT_SECRET);
+
+        await db.JwtTokenList.create({
+          id: uuidv4(),
+          user_id: user.id,
+          token: token,
+        });
+
+        return resolve(token);
+      });
+    } catch (error) {
+      return reject(error);
+    }
+  });
 };
 
 module.exports = {

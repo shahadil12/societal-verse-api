@@ -1,7 +1,11 @@
 const db = require("../models");
 const { v4: uuidv4 } = require("uuid");
+const sharp = require("sharp");
 
-const createProfile = async (userId) => {
+const createProfile = async (
+  userId,
+  { first_name, last_name, user_name, gender, dob, profile_picture }
+) => {
   try {
     const existingProfile = await db.Profile.findOne({
       where: { user_id: userId },
@@ -13,12 +17,30 @@ const createProfile = async (userId) => {
       };
     }
 
-    const user = await db.User.findOne({ where: { id: userId } });
+    const buf = Buffer.from(profile_picture, "base64");
+
+    const buf_story_profile_picture = await sharp(buf)
+      .resize(110, 110)
+      .toBuffer();
+    const buf_thumbnail_profile_picture = await sharp(buf)
+      .resize(320, 320)
+      .toBuffer();
+
+    const story_profile_picture = buf_story_profile_picture.toString("base64");
+    const thumbnail_profile_picture =
+      buf_thumbnail_profile_picture.toString("base64");
 
     await db.Profile.create({
       id: uuidv4(),
       user_id: userId,
-      full_name: user.full_name,
+      first_name,
+      last_name,
+      user_name,
+      gender,
+      dob,
+      profile_picture,
+      story_profile_picture,
+      thumbnail_profile_picture,
       private: false,
     });
 
