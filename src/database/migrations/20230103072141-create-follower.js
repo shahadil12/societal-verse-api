@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Followers", {
+    await queryInterface.createTable("tbl_followers", {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -16,17 +16,17 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
       },
-      createdAt: {
+      created_at: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
       },
-      updatedAt: {
+      updated_at: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
       },
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable("Followers");
+    await queryInterface.dropTable("tbl_followers");
   },
 };

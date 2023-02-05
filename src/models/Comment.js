@@ -38,6 +38,9 @@ module.exports = function commentModel(sequelize, DataTypes) {
     {
       sequelize,
       modelName: "Comment",
+      tableName: "tbl_comments",
+      freezeTableName: true,
+      underscored: true,
     }
   );
 

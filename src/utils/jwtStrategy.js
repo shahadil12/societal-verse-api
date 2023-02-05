@@ -1,10 +1,11 @@
 const JWTstrategy = require("passport-jwt").Strategy;
 const ExtractJWT = require("passport-jwt").ExtractJwt;
+require("dotenv").config();
 
 const jwtStrategy = new JWTstrategy(
   {
-    secretOrKey: "TOP_SECRET",
-    jwtFromRequest: ExtractJWT.fromUrlQueryParameter("secret_token"),
+    secretOrKey: process.env.JWT_SECRET,
+    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
   },
   async (token, done) => {
     try {

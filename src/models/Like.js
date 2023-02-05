@@ -35,6 +35,9 @@ module.exports = function likeModel(sequelize, DataTypes) {
     {
       sequelize,
       modelName: "Like",
+      tableName: "tbl_likes",
+      freezeTableName: true,
+      underscored: true,
     }
   );
 

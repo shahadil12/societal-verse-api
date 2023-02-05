@@ -35,6 +35,9 @@ module.exports = function postModel(sequelize, DataTypes) {
     {
       sequelize,
       modelName: "Post",
+      tableName: "tbl_posts",
+      freezeTableName: true,
+      underscored: true,
     }
   );
 

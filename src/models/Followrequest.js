@@ -30,6 +30,9 @@ module.exports = function followRequestModel(sequelize, DataTypes) {
     {
       sequelize,
       modelName: "FollowRequest",
+      tableName: "tbl_follow_requests",
+      freezeTableName: true,
+      underscored: true,
     }
   );
 

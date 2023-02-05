@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Profiles", {
+    await queryInterface.createTable("tbl_profiles", {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -30,17 +30,17 @@ module.exports = {
       thumbnail_profile_picture: {
         type: Sequelize.TEXT,
       },
-      createdAt: {
+      created_at: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
       },
-      updatedAt: {
+      updated_at: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
       },
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable("Profiles");
+    await queryInterface.dropTable("tbl_profiles");
   },
 };

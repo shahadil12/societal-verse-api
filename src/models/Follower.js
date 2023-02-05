@@ -29,6 +29,9 @@ module.exports = function followerModel(sequelize, DataTypes) {
     {
       sequelize,
       modelName: "Follower",
+      tableName: "tbl_followers",
+      freezeTableName: true,
+      underscored: true,
     }
   );
 

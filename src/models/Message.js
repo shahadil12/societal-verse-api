@@ -33,6 +33,9 @@ module.exports = function messageModel(sequelize, DataTypes) {
     {
       sequelize,
       modelName: "Message",
+      tableName: "tbl_messages",
+      freezeTableName: true,
+      underscored: true,
     }
   );
 

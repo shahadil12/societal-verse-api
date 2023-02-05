@@ -31,6 +31,9 @@ module.exports = function storyModel(sequelize, DataTypes) {
     {
       sequelize,
       modelName: "Story",
+      tableName: "tbl_strories",
+      freezeTableName: true,
+      underscored: true,
     }
   );
 

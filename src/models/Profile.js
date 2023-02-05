@@ -47,6 +47,9 @@ module.exports = function profileModel(sequelize, DataTypes) {
     {
       sequelize,
       modelName: "Profile",
+      tableName: "tbl_profiles",
+      freezeTableName: true,
+      underscored: true,
     }
   );
 

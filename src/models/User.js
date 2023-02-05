@@ -39,6 +39,9 @@ module.exports = function userModel(sequelize, DataTypes) {
     {
       sequelize,
       modelName: "User",
+      tableName: "tbl_users",
+      freezeTableName: true,
+      underscored: true,
     }
   );
   return User;
