@@ -1,8 +1,28 @@
 const profileService = require("../services/profile");
 
-const profile = async (req, res) => {
-  const response = await profileService.profile();
+const profileSuggestion = async (req, res) => {
+  const response = await profileService.profileSuggestion();
   return res.json(response);
 };
 
-module.exports = { profile };
+const createProfile = async (req, res) => {
+  const response = await profileService.createProfile(req.user.id);
+  return res.json(response);
+};
+
+const showProfile = async (req, res) => {
+  const response = await profileService.showProfile(req.user.id);
+  return res.json(response);
+};
+
+const showProfilePosts = async (req, res) => {
+  const response = await profileService.showProfilePosts(req.user.id);
+  return res.json(response);
+};
+
+module.exports = {
+  profileSuggestion,
+  createProfile,
+  showProfile,
+  showProfilePosts,
+};
