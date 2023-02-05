@@ -44,11 +44,27 @@ const secureRoute = require("./src/routes/secureRoute");
 //Auth routes
 app.use("/api/", auth);
 app.use("/api/", login);
+
+app.use(
+  "/api/",
+  (req, res, next) => {
+    console.log("1");
+    next();
+  },
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    console.log("2");
+    next();
+  },
+  showProfile
+);
+
 app.use("/api/", passport.authenticate("jwt", { session: false }), logout);
 
 // Profile routes
-app.use("/api/", passport.authenticate("jwt", { session: false }), profile);
-app.use("/api/", passport.authenticate("jwt", { session: false }), showProfile);
+
+// app.use("/api/", passport.authenticate("jwt", { session: false }), profile);
+
 app.use(
   "/api/",
   passport.authenticate("jwt", { session: false }),

@@ -1,24 +1,29 @@
 const { Model } = require("sequelize");
 
-module.exports = function JwtTokenListModel(sequelize, DataTypes) {
-  class JwtTokenList extends Model {}
+module.exports = function userModel(sequelize, DataTypes) {
+  class User extends Model {}
 
-  JwtTokenList.init(
+  User.init(
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      user_id: {
-        type: DataTypes.UUID,
+      full_name: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
-      user_id: {
-        type: DataTypes.UUID,
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      hash: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
-      token: {
+      salt: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -33,12 +38,11 @@ module.exports = function JwtTokenListModel(sequelize, DataTypes) {
     },
     {
       sequelize,
-      modelName: "JwtTokenList",
-      tableName: "tbl_jwt_token_list",
+      modelName: "User",
+      tableName: "tbl_users",
       freezeTableName: true,
       underscored: true,
     }
   );
-
-  return JwtTokenList;
+  return User;
 };

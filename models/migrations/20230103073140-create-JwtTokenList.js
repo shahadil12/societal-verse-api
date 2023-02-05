@@ -3,9 +3,10 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("tbl_jwt_token_list", {
-      user_id: {
+      id: {
         type: Sequelize.UUID,
-        allowNull: false,
+        defaultValue: Sequelize.UUIDV4,
+        primaryKey: true,
       },
       user_id: {
         type: Sequelize.UUID,

@@ -14,10 +14,6 @@ module.exports = function JwtTokenListModel(sequelize, DataTypes) {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      user_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-      },
       token: {
         type: DataTypes.STRING,
         allowNull: false,

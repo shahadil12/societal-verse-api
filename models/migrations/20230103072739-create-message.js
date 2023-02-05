@@ -2,16 +2,21 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("tbl_jwt_token_list", {
-      user_id: {
+    await queryInterface.createTable("tbl_messages", {
+      id: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        primaryKey: true,
+      },
+      sender_id: {
         type: Sequelize.UUID,
         allowNull: false,
       },
-      user_id: {
+      receiver_id: {
         type: Sequelize.UUID,
         allowNull: false,
       },
-      token: {
+      message: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -21,11 +26,10 @@ module.exports = {
       },
       updated_at: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
       },
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable("tbl_jwt_token_list");
+    await queryInterface.dropTable("tbl_messages");
   },
 };

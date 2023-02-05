@@ -1,25 +1,21 @@
 const { Model } = require("sequelize");
 
-module.exports = function JwtTokenListModel(sequelize, DataTypes) {
-  class JwtTokenList extends Model {}
+module.exports = function followRequestModel(sequelize, DataTypes) {
+  class FollowRequest extends Model {}
 
-  JwtTokenList.init(
+  FollowRequest.init(
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      user_id: {
+      requester_id: {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      user_id: {
+      requested_id: {
         type: DataTypes.UUID,
-        allowNull: false,
-      },
-      token: {
-        type: DataTypes.STRING,
         allowNull: false,
       },
       createdAt: {
@@ -33,12 +29,12 @@ module.exports = function JwtTokenListModel(sequelize, DataTypes) {
     },
     {
       sequelize,
-      modelName: "JwtTokenList",
-      tableName: "tbl_jwt_token_list",
+      modelName: "FollowRequest",
+      tableName: "tbl_follow_requests",
       freezeTableName: true,
       underscored: true,
     }
   );
 
-  return JwtTokenList;
+  return FollowRequest;
 };
