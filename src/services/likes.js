@@ -8,7 +8,7 @@ const createLike = async (postId) => {
       post_id: postId,
     });
 
-    return { success: true, message: "Comment created successfully" };
+    return { success: true, message: "Like created successfully" };
   } catch (error) {
     return { success: false, error };
   }
@@ -16,7 +16,7 @@ const createLike = async (postId) => {
 
 const showLike = async (postId) => {
   try {
-    const likes = await db.Like.findAll({
+    const { count: likes } = await db.Like.findAndCountAll({
       where: { post_id: postId },
     });
 

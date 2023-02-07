@@ -10,14 +10,22 @@ const deleteComment = async (req, res) => {
   return res.json(response);
 };
 
+const updateComment = async (req, res) => {
+  const response = await commentService.updateComment(
+    req.params.commentId,
+    req.body
+  );
+  return res.json(response);
+};
+
 const showAllComments = async (req, res) => {
   const response = await commentService.showAllComments(req.params.postId);
   return res.json(response);
 };
 
-const showComment = async (req, res) => {
-  const response = await commentService.showComment(req.params.commentId);
-  return res.json(response);
+module.exports = {
+  createComment,
+  deleteComment,
+  showAllComments,
+  updateComment,
 };
-
-module.exports = { createComment, deleteComment, showAllComments, showComment };

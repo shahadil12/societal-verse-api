@@ -4,7 +4,7 @@ const validationMiddleware = require("./validationMiddleware");
 const commentValidator = () => {
   return validationMiddleware(
     Joi.object({
-      comment: Joi.string().required(),
+      comment: Joi.string().trim().required(),
     })
   );
 };

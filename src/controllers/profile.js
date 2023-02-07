@@ -15,6 +15,11 @@ const showProfile = async (req, res) => {
   return res.json(response);
 };
 
+const updateProfile = async (req, res) => {
+  const response = await profileService.updateProfile(req.user.id, req.body);
+  return res.json(response);
+};
+
 const showProfilePosts = async (req, res) => {
   const response = await profileService.showProfilePosts(req.user.id);
   return res.json(response);
@@ -24,5 +29,6 @@ module.exports = {
   profileSuggestion,
   createProfile,
   showProfile,
+  updateProfile,
   showProfilePosts,
 };

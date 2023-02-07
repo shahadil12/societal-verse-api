@@ -4,7 +4,7 @@ const sharp = require("sharp");
 
 const createProfile = async (
   userId,
-  { first_name, last_name, user_name, gender, dob, profile_picture }
+  { first_name, last_name, user_name, gender, bio, dob, profile_picture }
 ) => {
   try {
     const existingProfile = await db.Profile.findOne({
@@ -38,6 +38,7 @@ const createProfile = async (
       user_name,
       gender,
       dob,
+      bio,
       profile_picture,
       story_profile_picture,
       thumbnail_profile_picture,
@@ -60,13 +61,60 @@ const profileSuggestion = async () => {
   }
 };
 
+const updateProfile = async (userId, attributes) => {
+  try {
+    const fileterdAttributes = Object.fromEntries(
+      Object.entries(attributes).filter(([key, value]) => value !== null)
+    );
+
+    if (fileterdAttributes.profile_picture) {
+      const buf = Buffer.from(fileterdAttributes.profile_picture, "base64");
+
+      const buf_story_profile_picture = await sharp(buf)
+        .resize(110, 110)
+        .toBuffer();
+      const buf_thumbnail_profile_picture = await sharp(buf)
+        .resize(320, 320)
+        .toBuffer();
+
+      fileterdAttributes.story_profile_picture =
+        buf_story_profile_picture.toString("base64");
+
+      fileterdAttributes.thumbnail_profile_picture =
+        buf_thumbnail_profile_picture.toString("base64");
+    }
+
+    await db.Profile.update(
+      { ...fileterdAttributes },
+      {
+        where: { user_id: userId },
+      }
+    );
+
+    return { success: true, message: "profile updated successfully" };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error };
+  }
+};
+
 const showProfile = async (userId) => {
   try {
     const profile = await db.Profile.findOne({
       where: { user_id: userId },
     });
 
-    return { success: true, profile };
+    const { count: followers } = await db.Follower.findAndCountAll({
+      where: { following_id: userId },
+    });
+
+    const { count: following } = await db.Follower.findAndCountAll({
+      where: { follower_id: userId },
+    });
+
+    const Profile = { profile, followers, following };
+
+    return { success: true, Profile };
   } catch (error) {
     return { success: false, error };
   }
@@ -74,7 +122,22 @@ const showProfile = async (userId) => {
 
 const showProfilePosts = async (userId) => {
   try {
-    const posts = await db.Post.findAll({ where: { user_id: userId } });
+    const onlyPosts = await db.Post.findAll({ where: { user_id: userId } });
+
+    const posts = await Promise.all(
+      onlyPosts.map(async (post) => {
+        const { count: likes } = await db.Like.findAndCountAll({
+          where: { post_id: post.id },
+        });
+
+        const comments = await db.Comment.findAll({
+          attributes: ["comment", "updated_at"],
+          where: { post_id: post.id },
+        });
+
+        return { post, comments, likes };
+      })
+    );
 
     return { success: true, posts };
   } catch (error) {
@@ -85,6 +148,7 @@ const showProfilePosts = async (userId) => {
 module.exports = {
   createProfile,
   profileSuggestion,
+  updateProfile,
   showProfile,
   showProfilePosts,
 };

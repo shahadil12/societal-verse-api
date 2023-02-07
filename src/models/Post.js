@@ -18,7 +18,7 @@ module.exports = function postModel(sequelize, DataTypes) {
         },
       },
       picture: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       caption: {

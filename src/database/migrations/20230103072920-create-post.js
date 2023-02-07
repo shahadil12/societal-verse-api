@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.UUID,
       },
       picture: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       caption: {

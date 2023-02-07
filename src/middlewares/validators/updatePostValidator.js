@@ -1,13 +1,13 @@
 const validationMiddleware = require("./validationMiddleware");
 const Joi = require("joi");
 
-const postValidator = () => {
+const updatePostValidator = () => {
   return validationMiddleware(
     Joi.object({
-      picture: Joi.string().trim().base64().required(),
+      picture: Joi.string().trim().base64(),
       caption: Joi.string().trim(),
     })
   );
 };
 
-module.exports = postValidator;
+module.exports = updatePostValidator;

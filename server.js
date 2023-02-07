@@ -6,8 +6,9 @@ const bodyParser = require("body-parser");
 const jwtStrategy = require("./src/utils/jwtStrategy");
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "5mb" }));
+app.use;
+app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 app.use(cors());
 app.use(passport.initialize());
 
@@ -19,7 +20,7 @@ const profile = require("./src/routes/profile");
 const posts = require("./src/routes/posts");
 const comments = require("./src/routes/comments");
 const likes = require("./src/routes/likes");
-const follow = require("./src/routes/follow");
+const user = require("./src/routes/user");
 
 app.use("/api/auth", auth);
 app.use(
@@ -38,6 +39,7 @@ app.use(
   passport.authenticate("jwt", { session: false }),
   likes
 );
+app.use("/api/user", passport.authenticate("jwt", { session: false }), user);
 
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);

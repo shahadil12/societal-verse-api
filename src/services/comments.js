@@ -29,6 +29,24 @@ const deleteComment = async (commentId) => {
   }
 };
 
+const updateComment = async (commentId, attributes) => {
+  try {
+    const filteredAttribute = Object.fromEntries(
+      Object.entries(attributes).filter(([key, value]) => value !== null)
+    );
+
+    await db.Comment.update(
+      { ...filteredAttribute },
+      { where: { id: commentId } }
+    );
+
+    return { success: true, message: "comment updated successfully" };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error };
+  }
+};
+
 const showAllComments = async (postId) => {
   try {
     const comments = await db.Comment.findAll({
@@ -40,14 +58,9 @@ const showAllComments = async (postId) => {
   }
 };
 
-const showComment = async (postId, commentId) => {
-  try {
-    const comment = await db.Comment.findOne({ where: { id: commentId } });
-
-    return { success: true, comment };
-  } catch (error) {
-    return { success: false, error };
-  }
+module.exports = {
+  createComment,
+  deleteComment,
+  showAllComments,
+  updateComment,
 };
-
-module.exports = { createComment, deleteComment, showAllComments, showComment };

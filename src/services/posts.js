@@ -1,16 +1,16 @@
 const db = require("../models");
 const { v4: uuidv4 } = require("uuid");
+const { Op } = require("sequelize");
 
-const createPost = async (req) => {
+const createPost = async (userId, postBody) => {
   try {
-    const user_id = req.user.id;
-    const { picture, caption } = req.body;
+    const { picture, caption } = postBody;
 
     await db.Post.create({
       id: uuidv4(),
-      user_id: user_id,
-      picture: picture,
-      caption: caption,
+      user_id: userId,
+      picture,
+      caption,
     });
 
     return { success: true, message: "post uploaded successfully" };
@@ -28,11 +28,44 @@ const deletePost = async (postId) => {
   }
 };
 
-const showAllPosts = async () => {
+const updatePost = async (postId, attributes) => {
   try {
-    const posts = await db.Post.findAll({ limit: 10 });
+    const filteredAttributes = Object.fromEntries(
+      Object.entries(attributes).filter(([key, vlaue]) => vlaue !== null)
+    );
 
-    return { success: true, posts };
+    await db.Post.update({ ...filteredAttributes }, { where: { id: postId } });
+
+    return { success: true, message: "post updated successfully" };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error };
+  }
+};
+
+const showAllPosts = async (userId) => {
+  try {
+    const posts = await db.Post.findAll({
+      where: { id: { [Op.ne]: userId } },
+      limit: 10,
+    });
+
+    const Posts = await Promise.all(
+      posts.map(async (post) => {
+        const { count: likes } = await db.Like.findAndCountAll({
+          where: { post_id: post.id },
+        });
+
+        const comments = await db.Comment.findAll({
+          attributes: ["comment", "updated_at"],
+          where: { post_id: post.id },
+        });
+
+        return { post, comments, likes };
+      })
+    );
+
+    return { success: true, Posts };
   } catch (error) {
     return { success: false, error };
   }
@@ -43,11 +76,19 @@ const showPost = async (postId) => {
     const post = await db.Post.findOne({
       where: { id: postId },
     });
+    const { count: likes } = await db.Like.findAndCountAll({
+      where: { post_id: postId },
+    });
+    const comments = await db.Comment.findAll({
+      attributes: ["comment", "updated_at"],
+      where: { post_id: postId },
+    });
 
-    return { success: true, post: post };
+    const Post = { post, likes, comments };
+    return { success: true, Post };
   } catch (error) {
     return { success: false, error };
   }
 };
 
-module.exports = { createPost, deletePost, showAllPosts, showPost };
+module.exports = { createPost, deletePost, showAllPosts, showPost, updatePost };
