@@ -7,7 +7,6 @@ const deleteUser = async (userId) => {
 
     return { success: true };
   } catch (error) {
-    console.log(error);
     return { success: true, error };
   }
 };

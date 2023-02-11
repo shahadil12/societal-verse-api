@@ -8,7 +8,7 @@ const createPost = async (userId, postBody) => {
 
     await db.Post.create({
       id: uuidv4(),
-      user_id: userId,
+      userId,
       picture,
       caption,
     });
@@ -30,15 +30,17 @@ const deletePost = async (postId) => {
 
 const updatePost = async (postId, attributes) => {
   try {
-    const filteredAttributes = Object.fromEntries(
-      Object.entries(attributes).filter(([key, vlaue]) => vlaue !== null)
-    );
+    const response = await db.Post.update(attributes, {
+      where: { id: postId },
+    });
 
-    await db.Post.update({ ...filteredAttributes }, { where: { id: postId } });
+    const success = !!(response?.[0] && response[0] === 1);
 
-    return { success: true, message: "post updated successfully" };
+    return {
+      success,
+      message: success ? "Post updated successfully" : "Post not updated",
+    };
   } catch (error) {
-    console.log(error);
     return { success: false, error };
   }
 };

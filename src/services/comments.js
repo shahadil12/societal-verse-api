@@ -42,7 +42,6 @@ const updateComment = async (commentId, attributes) => {
 
     return { success: true, message: "comment updated successfully" };
   } catch (error) {
-    console.log(error);
     return { success: false, error };
   }
 };

@@ -53,6 +53,7 @@ const createProfile = async (
 
 const profileSuggestion = async () => {
   try {
+    // TODO: get the people from my follower's list whom I am not following
     const profiles = await db.Profile.findAll({ limit: 15 });
 
     return { success: true, profiles };
@@ -93,7 +94,6 @@ const updateProfile = async (userId, attributes) => {
 
     return { success: true, message: "profile updated successfully" };
   } catch (error) {
-    console.log(error);
     return { success: false, error };
   }
 };
@@ -112,9 +112,7 @@ const showProfile = async (userId) => {
       where: { follower_id: userId },
     });
 
-    const Profile = { profile, followers, following };
-
-    return { success: true, Profile };
+    return { success: true, profile, followers, following };
   } catch (error) {
     return { success: false, error };
   }

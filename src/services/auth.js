@@ -34,7 +34,6 @@ const register = async (req) => {
 
     return { success: true, token: await generateToken(req, user) };
   } catch (error) {
-    console.log({ error });
     return { success: false, error };
   }
 };
