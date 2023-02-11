@@ -1,7 +1,7 @@
 const Joi = require("joi");
 const validationMiddleware = require("./validationMiddleware");
 
-const passwordRegex = /^[a-zA-Z0-9]{8,16}$/;
+const passwordRegex = /^.{8,16}$/;
 
 const loginUserValidator = () => {
   return validationMiddleware(

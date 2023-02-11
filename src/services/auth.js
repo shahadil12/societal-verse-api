@@ -15,7 +15,7 @@ const register = async (req) => {
     if (existingUser) {
       return {
         success: false,
-        error: "User already exists",
+        error: "this email address is not available",
       };
     }
 
@@ -40,8 +40,6 @@ const register = async (req) => {
 };
 
 const login = async (req, res, next) => {
-  const { email, password } = req.body;
-
   passport.authenticate("login", async (error, user) => {
     try {
       if (error) {

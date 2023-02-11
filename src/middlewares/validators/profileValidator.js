@@ -15,7 +15,7 @@ const profileValidator = () => {
         .max(20)
         .required(),
       user_name: Joi.string().trim().max(20).required(),
-      gender: Joi.string().valid("MALE", "FEMALE").required(),
+      gender: Joi.string().valid("MALE", "FEMALE", "OTHER").required(),
       dob: Joi.date().iso().required(),
       bio: Joi.string().trim().max(500).required(),
       profile_picture: Joi.string().trim().base64().required(),
