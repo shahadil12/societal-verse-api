@@ -104,6 +104,10 @@ const showProfile = async (userId) => {
       where: { user_id: userId },
     });
 
+    if (!profile) {
+      return { success: false, profile };
+    }
+
     const { count: followers } = await db.Follower.findAndCountAll({
       where: { following_id: userId },
     });
