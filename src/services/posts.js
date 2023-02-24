@@ -8,7 +8,7 @@ const createPost = async (userId, postBody) => {
 
     await db.Post.create({
       id: uuidv4(),
-      userId,
+      user_id: userId,
       picture,
       caption,
     });
@@ -47,28 +47,53 @@ const updatePost = async (postId, attributes) => {
 
 const showAllPosts = async (userId) => {
   try {
-    const posts = await db.Post.findAll({
-      where: { id: { [Op.ne]: userId } },
-      limit: 10,
+    const OnlyPosts = await db.Post.findAll({
+      where: { user_id: { [Op.ne]: userId } },
     });
 
-    const Posts = await Promise.all(
-      posts.map(async (post) => {
+    const posts = await Promise.all(
+      OnlyPosts.map(async (post) => {
         const { count: likes } = await db.Like.findAndCountAll({
           where: { post_id: post.id },
         });
 
+        const { count: isUserLikedPost } = await db.Like.findAndCountAll({
+          where: { user_id: userId },
+        });
+
+        const userDetail = await db.Profile.findOne({
+          attributes: ["thumbnail_profile_picture", "user_name"],
+          where: { user_id: post.user_id },
+        });
+
         const comments = await db.Comment.findAll({
-          attributes: ["comment", "updated_at"],
+          attributes: ["comment", "updatedAt", "user_id"],
           where: { post_id: post.id },
         });
 
-        return { post, comments, likes };
+        const commenterDetails = await Promise.all(
+          comments.map(async (comment) => {
+            const comments = await db.Profile.findOne({
+              attributes: ["thumbnail_profile_picture", "user_name"],
+              where: { user_id: comment.user_id },
+            });
+            return comments;
+          })
+        );
+        return {
+          post,
+          comments,
+          likes,
+          commenterDetails,
+          userDetail,
+          isUserLikedPost,
+        };
       })
     );
 
-    return { success: true, Posts };
+    return { success: true, posts };
   } catch (error) {
+    console.log(error);
     return { success: false, error };
   }
 };

@@ -42,14 +42,14 @@ const login = async (req, res, next) => {
   passport.authenticate("login", async (error, user) => {
     try {
       if (error) {
-        return res.json({ error: "An error occured" });
+        return res.json({ error: error.message });
       }
 
       if (!user) {
         return res.json({ error: "User not found" });
       }
 
-      return res.json({ token: await generateToken(req, user) });
+      return res.json({ success: true, token: await generateToken(req, user) });
     } catch (error) {
       return next(error);
     }

@@ -1,7 +1,7 @@
 const profileService = require("../services/profile");
 
 const profileSuggestion = async (req, res) => {
-  const response = await profileService.profileSuggestion();
+  const response = await profileService.profileSuggestion(req.user.id);
   return res.json(response);
 };
 

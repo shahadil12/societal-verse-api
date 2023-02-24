@@ -1,6 +1,7 @@
 const db = require("../models");
 const { v4: uuidv4 } = require("uuid");
 const sharp = require("sharp");
+const { Op } = require("sequelize");
 
 const createProfile = async (
   userId,
@@ -51,10 +52,17 @@ const createProfile = async (
   }
 };
 
-const profileSuggestion = async () => {
+const profileSuggestion = async (userId) => {
   try {
     // TODO: get the people from my follower's list whom I am not following
-    const profiles = await db.Profile.findAll({ limit: 15 });
+    const profiles = await db.Profile.findAll({
+      where: {
+        user_id: {
+          [Op.ne]: userId,
+        },
+      },
+      limit: 15,
+    });
 
     return { success: true, profiles };
   } catch (error) {
@@ -132,15 +140,39 @@ const showProfilePosts = async (userId) => {
           where: { post_id: post.id },
         });
 
+        const { count: isUserLikedPost } = await db.Like.findAndCountAll({
+          where: { user_id: userId },
+        });
+
+        const userDetail = await db.Profile.findOne({
+          attributes: ["thumbnail_profile_picture", "user_name"],
+          where: { user_id: post.user_id },
+        });
+
         const comments = await db.Comment.findAll({
-          attributes: ["comment", "updated_at"],
+          attributes: ["comment", "updatedAt", "user_id"],
           where: { post_id: post.id },
         });
 
-        return { post, comments, likes };
+        const commenterDetails = await Promise.all(
+          comments.map(async (comment) => {
+            const comments = await db.Profile.findOne({
+              attributes: ["thumbnail_profile_picture", "user_name"],
+              where: { user_id: comment.user_id },
+            });
+            return comments;
+          })
+        );
+        return {
+          post,
+          comments,
+          likes,
+          commenterDetails,
+          userDetail,
+          isUserLikedPost,
+        };
       })
     );
-
     return { success: true, posts };
   } catch (error) {
     return { success: false, error };

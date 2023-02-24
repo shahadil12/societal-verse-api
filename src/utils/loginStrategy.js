@@ -11,11 +11,11 @@ const loginStrategy = new localStrategy(
     try {
       const user = await findUser(email);
       if (!user) {
-        return done(null, false, { message: "User not found" });
+        return done({ message: "User not found" }, false);
       }
       const isAuthenticated = user && validatePassword(user, password);
       if (!isAuthenticated) {
-        return done(null, false, { message: "Invalid Password" });
+        return done({ message: "Invalid Password" }, false);
       }
 
       return done(null, user, { message: "Login in Successfully " });
