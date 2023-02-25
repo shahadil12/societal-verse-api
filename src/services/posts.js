@@ -103,16 +103,7 @@ const showPost = async (postId) => {
     const post = await db.Post.findOne({
       where: { id: postId },
     });
-    const { count: likes } = await db.Like.findAndCountAll({
-      where: { post_id: postId },
-    });
-    const comments = await db.Comment.findAll({
-      attributes: ["comment", "updated_at"],
-      where: { post_id: postId },
-    });
-
-    const Post = { post, likes, comments };
-    return { success: true, Post };
+    return { success: true, post };
   } catch (error) {
     return { success: false, error };
   }

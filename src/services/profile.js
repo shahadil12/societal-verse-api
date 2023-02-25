@@ -54,17 +54,16 @@ const createProfile = async (
 
 const profileSuggestion = async (userId) => {
   try {
+    console.log(userId);
     // TODO: get the people from my follower's list whom I am not following
     const profiles = await db.Profile.findAll({
       where: {
-        user_id: {
-          [Op.ne]: userId,
-        },
+        user_id: { [Op.ne]: userId },
       },
       limit: 15,
     });
 
-    return { success: true, profiles };
+    return { success: true, profiles: profiles };
   } catch (error) {
     return { success: false, error };
   }
@@ -100,7 +99,11 @@ const updateProfile = async (userId, attributes) => {
       }
     );
 
-    return { success: true, message: "profile updated successfully" };
+    const profile = await db.Profile.findOne({
+      where: { user_id: userId },
+    });
+
+    return { success: true, profile: profile };
   } catch (error) {
     return { success: false, error };
   }
@@ -108,6 +111,7 @@ const updateProfile = async (userId, attributes) => {
 
 const showProfile = async (userId) => {
   try {
+    co;
     const profile = await db.Profile.findOne({
       where: { user_id: userId },
     });
@@ -125,6 +129,36 @@ const showProfile = async (userId) => {
     });
 
     return { success: true, profile, followers, following };
+  } catch (error) {
+    return { success: false, error };
+  }
+};
+
+const showSpecificProfile = async (userId, profileUserId) => {
+  try {
+    const profile = await db.Profile.findOne({
+      where: { user_id: profileUserId },
+    });
+
+    if (!profile) {
+      return { success: false, profile };
+    }
+
+    const { count: isUserFollowing } = await db.Follower.findAndCountAll({
+      where: {
+        [Op.and]: [{ follower_id: userId }, { following_id: profileUserId }],
+      },
+    });
+
+    const { count: followers } = await db.Follower.findAndCountAll({
+      where: { following_id: profileUserId },
+    });
+
+    const { count: following } = await db.Follower.findAndCountAll({
+      where: { follower_id: profileUserId },
+    });
+
+    return { success: true, profile, followers, following, isUserFollowing };
   } catch (error) {
     return { success: false, error };
   }
@@ -185,4 +219,5 @@ module.exports = {
   updateProfile,
   showProfile,
   showProfilePosts,
+  showSpecificProfile,
 };

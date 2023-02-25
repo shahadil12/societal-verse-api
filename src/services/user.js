@@ -27,8 +27,24 @@ const follow = async (requester_id, requested_id) => {
 
     return { success: true, message: "followed successfully" };
   } catch (error) {
-    return { success: false, error };
+    return { success: false, error: error };
   }
 };
 
-module.exports = { follow, deleteUser };
+const unfollow = async (requester_id) => {
+  try {
+    await db.FollowRequest.destroy({
+      where: { requester_id: requester_id },
+    });
+
+    await db.Follower.destroy({
+      where: { follower_id: requester_id },
+    });
+
+    return { success: true, message: "unfollowed user" };
+  } catch (error) {
+    return { success: false, error: error };
+  }
+};
+
+module.exports = { follow, deleteUser, unfollow };
