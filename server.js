@@ -20,24 +20,54 @@ const socketIo = new Server(server, {
   cors: "http://localhost:5000",
 });
 
-socketIo.use((socket, next) => {
-  console.log(socket.handshake);
-  const userId = socket.handshake.auth.userId;
-  if (!userId) {
-    throw new Error("invalid user");
+socketIo.use(async (socket, next) => {
+  try {
+    const sessionId = socket.handshake.auth.sessionId;
+    if (sessionId) {
+      const session = await db.SessionStore.findOne({
+        where: {
+          id: sessionId,
+        },
+      });
+      if (session) {
+        socket.sessionId = sessionId;
+        socket.userId = session.dataValues.user_id;
+        return next();
+      }
+    }
+    if (!sessionId) {
+      const userId = socket.handshake.auth.userId;
+      const id = uuidv4();
+
+      await db.SessionStore.create({
+        id: id,
+        socket_id: socket.id,
+        user_id: userId,
+      });
+
+      socket.sessionId = id;
+      socket.userId = userId;
+      next();
+    }
+  } catch (error) {
+    console.log(error);
   }
-  socket.userId = userId;
-  next();
 });
-socketIo.on("connection", (socket) => {
-  const users = [];
-  for (let [id, socket] of socketIo.of("/").sockets) {
-    users.push({
-      socketID: id,
-      userId: socket.userId,
-    });
-  }
+
+socketIo.on("connection", async (socket) => {
+  socket.emit("session", {
+    sessionId: socket.sessionId,
+    userId: socket.userId,
+  });
+  const usersSession = await db.SessionStore.findAll();
+  const users = usersSession.map((session) => {
+    return session.dataValues;
+  });
+  console.log(users);
   socket.emit("users", users);
+
+  socket.join(socket.userId);
+
   socket.on("private_message", async ({ message, to, from, toId }) => {
     await db.Message.create({
       id: uuidv4(),
@@ -46,11 +76,12 @@ socketIo.on("connection", (socket) => {
       receiver_id: toId,
     });
 
-    socket.to(to).emit("private_message", {
+    socket.to(to).to(socket.userId).emit("private_message", {
       message,
       from,
     });
   });
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });

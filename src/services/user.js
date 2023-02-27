@@ -82,4 +82,15 @@ const followingProfile = async (userId) => {
   }
 };
 
-module.exports = { follow, deleteUser, unfollow, followingProfile };
+const sessionId = async (userId) => {
+  try {
+    const session = await db.SessionStore.findOne({
+      where: { user_id: userId },
+    });
+
+    return { success: true, session };
+  } catch (error) {
+    return { success: false, error: error };
+  }
+};
+module.exports = { follow, deleteUser, unfollow, followingProfile, sessionId };

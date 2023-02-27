@@ -23,4 +23,9 @@ const followingProfile = async (req, res) => {
   return res.json(response);
 };
 
-module.exports = { follow, deleteUser, unfollow, followingProfile };
+const sessionId = async (req, res) => {
+  const response = await userService.sessionId(req.body.userId);
+  return res.json(response);
+};
+
+module.exports = { follow, deleteUser, unfollow, followingProfile, sessionId };
