@@ -1,7 +1,7 @@
 const likeService = require("../services/likes");
 
 const createLike = async (req, res) => {
-  const response = await likeService.createLike(req.params.postId);
+  const response = await likeService.createLike(req.user.id, req.params.postId);
   return res.json(response);
 };
 

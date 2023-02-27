@@ -1,25 +1,21 @@
 const { Model } = require("sequelize");
 
-module.exports = function messageModel(sequelize, DataTypes) {
-  class Message extends Model {}
+module.exports = function sessionStoreModel(sequelize, DataTypes) {
+  class SessionStore extends Model {}
 
-  Message.init(
+  SessionStore.init(
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      sender_id: {
-        type: DataTypes.STRING,
+      socket_id: {
+        type: DataTypes.STRING(50),
         allowNull: false,
       },
-      receiver_id: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      message: {
-        type: DataTypes.STRING,
+      user_id: {
+        type: DataTypes.UUID,
         allowNull: false,
       },
       createdAt: {
@@ -32,12 +28,12 @@ module.exports = function messageModel(sequelize, DataTypes) {
     },
     {
       sequelize,
-      modelName: "Message",
-      tableName: "tbl_messages",
+      modelName: "SessionStore",
+      tableName: "tbl_session_store",
       freezeTableName: true,
       underscored: true,
     }
   );
 
-  return Message;
+  return SessionStore;
 };

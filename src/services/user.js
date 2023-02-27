@@ -47,4 +47,39 @@ const unfollow = async (requester_id) => {
   }
 };
 
-module.exports = { follow, deleteUser, unfollow };
+const followingProfile = async (userId) => {
+  try {
+    const followings = await db.Follower.findAll({
+      where: { follower_id: userId },
+    });
+
+    const followers = await db.Follower.findAll({
+      where: { following_id: userId },
+    });
+
+    const followersProfile = await Promise.all(
+      followers.map(async (follower) => {
+        const profiles = await db.Profile.findAll({
+          where: { user_id: follower.dataValues.follower_id },
+        });
+        return profiles;
+      })
+    );
+
+    const followingProfile = await Promise.all(
+      followings.map(async (following) => {
+        const profiles = await db.Profile.findAll({
+          where: { user_id: following.dataValues.following_id },
+        });
+        return profiles;
+      })
+    );
+
+    const profiles = [...followersProfile, ...followingProfile];
+    return { success: true, profiles };
+  } catch (error) {
+    return { success: false, error: error };
+  }
+};
+
+module.exports = { follow, deleteUser, unfollow, followingProfile };

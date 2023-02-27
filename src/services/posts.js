@@ -58,7 +58,7 @@ const showAllPosts = async (userId) => {
         });
 
         const { count: isUserLikedPost } = await db.Like.findAndCountAll({
-          where: { user_id: userId },
+          where: { post_id: post.id, user_id: userId },
         });
 
         const userDetail = await db.Profile.findOne({
@@ -66,10 +66,19 @@ const showAllPosts = async (userId) => {
           where: { user_id: post.user_id },
         });
 
-        const comments = await db.Comment.findAll({
-          attributes: ["comment", "updatedAt", "user_id"],
+        const allComments = await db.Comment.findAll({
+          attributes: ["comment", "updatedAt", "user_id", "id"],
           where: { post_id: post.id },
         });
+        const userComments = allComments.filter((comment) => {
+          return comment.userId === userId;
+        });
+
+        const othersComments = allComments.filter((comment) => {
+          return comment.userId !== userId;
+        });
+
+        const comments = [...userComments, ...othersComments];
 
         const commenterDetails = await Promise.all(
           comments.map(async (comment) => {

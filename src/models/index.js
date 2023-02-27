@@ -10,6 +10,7 @@ const profileModel = require("./Profile");
 const storyModel = require("./Story");
 const userModel = require("./User");
 const JwtTokenListModel = require("./JwtTokenList");
+const SessionStoreModel = require("./SessionStore");
 
 const config = require("../database/config/index")[process.env.NODE_ENV];
 const db = {};
@@ -34,5 +35,6 @@ db.Profile = profileModel(sequelize, DataTypes);
 db.Story = storyModel(sequelize, DataTypes);
 db.User = userModel(sequelize, DataTypes);
 db.JwtTokenList = JwtTokenListModel(sequelize, DataTypes);
+db.SessionStore = SessionStoreModel(sequelize, DataTypes);
 
 module.exports = db;

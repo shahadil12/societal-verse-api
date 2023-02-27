@@ -9,11 +9,11 @@ module.exports = {
         primaryKey: true,
       },
       sender_id: {
-        type: Sequelize.UUID,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       receiver_id: {
-        type: Sequelize.UUID,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       message: {

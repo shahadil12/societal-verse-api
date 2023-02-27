@@ -1,10 +1,11 @@
 const db = require("../models");
 const { v4: uuidv4 } = require("uuid");
 
-const createLike = async (postId) => {
+const createLike = async (userId, postId) => {
   try {
     await db.Like.create({
       id: uuidv4(),
+      user_id: userId,
       post_id: postId,
     });
 

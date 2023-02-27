@@ -18,4 +18,9 @@ const unfollow = async (req, res) => {
   return res.json(response);
 };
 
-module.exports = { follow, deleteUser, unfollow };
+const followingProfile = async (req, res) => {
+  const response = await userService.followingProfile(req.user.id);
+  return res.json(response);
+};
+
+module.exports = { follow, deleteUser, unfollow, followingProfile };

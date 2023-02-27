@@ -5,12 +5,56 @@ const passport = require("passport");
 const bodyParser = require("body-parser");
 const jwtStrategy = require("./src/utils/jwtStrategy");
 const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const db = require("./src/models");
+const { v4: uuidv4 } = require("uuid");
 
 app.use(bodyParser.json({ limit: "5mb" }));
-app.use;
 app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 app.use(cors());
 app.use(passport.initialize());
+
+const socketIo = new Server(server, {
+  cors: "http://localhost:5000",
+});
+
+socketIo.use((socket, next) => {
+  console.log(socket.handshake);
+  const userId = socket.handshake.auth.userId;
+  if (!userId) {
+    throw new Error("invalid user");
+  }
+  socket.userId = userId;
+  next();
+});
+socketIo.on("connection", (socket) => {
+  const users = [];
+  for (let [id, socket] of socketIo.of("/").sockets) {
+    users.push({
+      socketID: id,
+      userId: socket.userId,
+    });
+  }
+  socket.emit("users", users);
+  socket.on("private_message", async ({ message, to, from, toId }) => {
+    await db.Message.create({
+      id: uuidv4(),
+      message: message,
+      sender_id: from,
+      receiver_id: toId,
+    });
+
+    socket.to(to).emit("private_message", {
+      message,
+      from,
+    });
+  });
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+});
 
 passport.use("jwt", jwtStrategy);
 dotenv.config();
@@ -46,6 +90,6 @@ app.use(function (err, req, res, next) {
   res.json({ error: err });
 });
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   console.log(`Server running at ${process.env.PORT}...`);
 });
