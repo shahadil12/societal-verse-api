@@ -22,6 +22,7 @@ const socketIo = new Server(server, {
 
 socketIo.use(async (socket, next) => {
   try {
+    console.log(socket.handshake);
     const sessionId = socket.handshake.auth.sessionId;
     if (sessionId) {
       const session = await db.SessionStore.findOne({

@@ -211,6 +211,55 @@ const showProfilePosts = async (userId) => {
   }
 };
 
+const showSpecificProfilePosts = async (userId) => {
+  try {
+    const onlyPosts = await db.Post.findAll({ where: { user_id: userId } });
+
+    const posts = await Promise.all(
+      onlyPosts.map(async (post) => {
+        const { count: likes } = await db.Like.findAndCountAll({
+          where: { post_id: post.id },
+        });
+
+        const { count: isUserLikedPost } = await db.Like.findAndCountAll({
+          where: { user_id: userId },
+        });
+
+        const userDetail = await db.Profile.findOne({
+          attributes: ["thumbnail_profile_picture", "user_name"],
+          where: { user_id: post.user_id },
+        });
+
+        const comments = await db.Comment.findAll({
+          attributes: ["comment", "updatedAt", "user_id"],
+          where: { post_id: post.id },
+        });
+
+        const commenterDetails = await Promise.all(
+          comments.map(async (comment) => {
+            const comments = await db.Profile.findOne({
+              attributes: ["thumbnail_profile_picture", "user_name"],
+              where: { user_id: comment.user_id },
+            });
+            return comments;
+          })
+        );
+        return {
+          post,
+          comments,
+          likes,
+          commenterDetails,
+          userDetail,
+          isUserLikedPost,
+        };
+      })
+    );
+    return { success: true, posts };
+  } catch (error) {
+    return { success: false, error };
+  }
+};
+
 module.exports = {
   createProfile,
   profileSuggestion,
@@ -218,4 +267,5 @@ module.exports = {
   showProfile,
   showProfilePosts,
   showSpecificProfile,
+  showSpecificProfilePosts,
 };

@@ -1,6 +1,6 @@
 const db = require("../models");
 const { v4: uuidv4 } = require("uuid");
-
+const { Op } = require("sequelize");
 const deleteUser = async (userId) => {
   try {
     await db.User.destroy({ where: { id: userId } });
@@ -93,4 +93,31 @@ const sessionId = async (userId) => {
     return { success: false, error: error };
   }
 };
-module.exports = { follow, deleteUser, unfollow, followingProfile, sessionId };
+
+const messages = async (loggedUserId, userId) => {
+  try {
+    const messages = await db.Message.findAll({
+      where: {
+        [Op.or]: [
+          { receiver_id: loggedUserId },
+          { sender_id: loggedUserId },
+          { receiver_id: userId },
+          { sender_id: userId },
+        ],
+      },
+      order: [["created_at", "ASC"]],
+    });
+
+    return { success: true, messages };
+  } catch (error) {
+    return { success: false, error: error };
+  }
+};
+module.exports = {
+  follow,
+  deleteUser,
+  unfollow,
+  followingProfile,
+  sessionId,
+  messages,
+};

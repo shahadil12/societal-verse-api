@@ -28,4 +28,15 @@ const sessionId = async (req, res) => {
   return res.json(response);
 };
 
-module.exports = { follow, deleteUser, unfollow, followingProfile, sessionId };
+const messages = async (req, res) => {
+  const response = await userService.messages(req.user.id, req.body.userId);
+  return res.json(response);
+};
+module.exports = {
+  follow,
+  deleteUser,
+  unfollow,
+  followingProfile,
+  sessionId,
+  messages,
+};

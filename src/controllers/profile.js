@@ -10,6 +10,14 @@ const createProfile = async (req, res) => {
   return res.json(response);
 };
 
+const showSpecificProfilePosts = async (req, res) => {
+  console.log("hii");
+  const response = await profileService.showSpecificProfilePosts(
+    req.body.userId
+  );
+  return res.json(response);
+};
+
 const showProfile = async (req, res) => {
   const response = await profileService.showProfile(req.user.id);
   return res.json(response);
@@ -40,4 +48,5 @@ module.exports = {
   updateProfile,
   showProfilePosts,
   showSpecificProfile,
+  showSpecificProfilePosts,
 };
