@@ -22,7 +22,6 @@ const socketIo = new Server(server, {
 
 socketIo.use(async (socket, next) => {
   try {
-    console.log(socket.handshake);
     const sessionId = socket.handshake.auth.sessionId;
     if (sessionId) {
       const session = await db.SessionStore.findOne({
@@ -64,7 +63,6 @@ socketIo.on("connection", async (socket) => {
   const users = usersSession.map((session) => {
     return session.dataValues;
   });
-  console.log(users);
   socket.emit("users", users);
 
   socket.join(socket.userId);
