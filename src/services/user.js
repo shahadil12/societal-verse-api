@@ -99,10 +99,8 @@ const messages = async (loggedUserId, userId) => {
     const messages = await db.Message.findAll({
       where: {
         [Op.or]: [
-          { receiver_id: loggedUserId },
-          { sender_id: loggedUserId },
-          { receiver_id: userId },
-          { sender_id: userId },
+          { [Op.and]: [{ receiver_id: loggedUserId }, { sender_id: userId }] },
+          { [Op.and]: [{ receiver_id: userId }, { sender_id: loggedUserId }] },
         ],
       },
       order: [["created_at", "ASC"]],

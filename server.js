@@ -29,6 +29,7 @@ socketIo.use(async (socket, next) => {
           id: sessionId,
         },
       });
+
       if (session) {
         socket.sessionId = sessionId;
         socket.userId = session.dataValues.user_id;
@@ -73,6 +74,11 @@ socketIo.on("connection", async (socket) => {
       message: message,
       sender_id: from,
       receiver_id: toId,
+    });
+    console.log("hiii");
+    socket.broadcast.emit("messageResponse", {
+      message: message,
+      from,
     });
 
     socket.to(to).to(socket.userId).emit("private_message", {
