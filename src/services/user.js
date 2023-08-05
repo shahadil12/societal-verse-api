@@ -1,4 +1,5 @@
 const db = require("../models");
+const pgpdb = require("../database/pg-promise");
 const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
 const deleteUser = async (userId) => {
@@ -96,15 +97,27 @@ const sessionId = async (userId) => {
 
 const messages = async (loggedUserId, userId) => {
   try {
-    const messages = await db.Message.findAll({
-      where: {
-        [Op.or]: [
-          { [Op.and]: [{ receiver_id: loggedUserId }, { sender_id: userId }] },
-          { [Op.and]: [{ receiver_id: userId }, { sender_id: loggedUserId }] },
-        ],
-      },
-      order: [["created_at", "ASC"]],
-    });
+    // const messages = await db.Message.findAll({
+    //   where: {
+    //     [Op.or]: [
+    //       { [Op.and]: [{ receiver_id: loggedUserId }, { sender_id: userId }] },
+    //       { [Op.and]: [{ receiver_id: userId }, { sender_id: loggedUserId }] },
+    //     ],
+    //   },
+    //   order: [["created_at", "ASC"]],
+    // });
+
+    const messages = await pgpdb.any(
+      `select * from tbl_messages where messages @> jsonb_build_array(
+      jsonb_build_object(
+       'sender' , $1,
+      'receiver', $2
+      )) or messages @> jsonb_build_array(jsonb_build_object(
+       'sender' , $2,
+      'receiver', $1
+      ))`,
+      [userId, loggedUserId]
+    );
 
     return { success: true, messages };
   } catch (error) {
